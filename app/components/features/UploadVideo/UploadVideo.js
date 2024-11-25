@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { ref, uploadBytesResumable, getDownloadURL, getMetadata } from "firebase/storage";
 import { storage } from "../../../../firebase";
@@ -29,6 +29,28 @@ export default function UploadVideo({ file }) {
 
     const size = getReadableFileSize(file)
 
+    async function handleUploadSuccess(videoDetails) {
+        console.log('handleUploadSuccess')
+        try {
+            const response = await fetch('/api/upload-complete', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(videoDetails),
+            })
+
+            if (response.ok) {
+                const data = await response.json()
+                console.log({data})
+            } else {
+                console.log('handle non-200 response')
+            }
+        } catch(error) {
+            console.error(error)
+        }
+    }
+
     function handleUpload(e, file) {
         e.preventDefault()
 
@@ -55,10 +77,10 @@ export default function UploadVideo({ file }) {
                 // Get the download URL
                 const { ref } = uploadTask.snapshot
                 const url = await getDownloadURL(ref);
-                const metadata = await getMetadata(ref)
-                const details = { url, metadata }
+                const { name, size, contentType } = await getMetadata(ref)
+                const details = { url, metadata: { name, size, contentType } }
 
-                setVideoDetails(details);
+                handleUploadSuccess(details);
             }
         );
     }
