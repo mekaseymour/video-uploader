@@ -7,9 +7,8 @@ import Button from "@/components/common/Button"
 import Card from "@/components/common/Card/Card"
 
 /* handle edge case where file is null */
-export default function UploadVideo({ file }) {
+export default function UploadVideo({ file, onUploadSuccess }) {
     const [progress, setProgress] = useState(0);
-    const [ videoDetails, setVideoDetails ] = useState()
 
     function getReadableFileSize(file) {
         const bytes = file.size
@@ -30,7 +29,6 @@ export default function UploadVideo({ file }) {
     const size = getReadableFileSize(file)
 
     async function handleUploadSuccess(videoDetails) {
-        console.log('handleUploadSuccess')
         try {
             const response = await fetch('/api/upload-complete', {
                 method: 'POST',
@@ -42,7 +40,7 @@ export default function UploadVideo({ file }) {
 
             if (response.ok) {
                 const data = await response.json()
-                console.log({data})
+                onUploadSuccess(data)
             } else {
                 console.log('handle non-200 response')
             }
