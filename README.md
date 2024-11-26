@@ -56,4 +56,4 @@ At a high-level this system will enable two different user experiences: video up
 
 ## Architecture
 
-![Group 16](https://github.com/user-attachments/assets/80549b3e-5fae-4c58-9868-1031a910cfc6)
+<img src="https://github.com/user-attachments/assets/80549b3e-5fae-4c58-9868-1031a910cfc6" width="500px" />
